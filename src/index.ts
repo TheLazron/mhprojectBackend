@@ -1,5 +1,5 @@
 var express = require('express');
-const groupsRouter  = require('./routes/groups');
+const groupsRouter  = require('./routes/groupRoutes');
 const app = express();
 
 

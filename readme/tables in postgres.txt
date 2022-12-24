@@ -1,0 +1,20 @@
+user{
+    userID
+    name
+    email
+    bio
+    profileUrl
+    Groups
+}
+
+group{
+    groupID
+    name
+    description
+    bannerUrl
+    nextMeetingTime
+    total members
+    full
+    members users[]
+}
+

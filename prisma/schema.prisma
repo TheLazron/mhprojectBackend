@@ -10,10 +10,20 @@ datasource db {
   url      = "postgresql://user:admin@localhost:5432/mydb?schema=public"
 }
 
-model dummytable1 {
-  id        Int      @id @default(autoincrement())
-  title     String   @db.VarChar(255)
-  createdAt DateTime @default(now()) @db.Timestamp(6)
-  content   String?
-  published Boolean  @default(false)
+model User {
+  userID     String @id @default(uuid())
+  name       String @db.Text
+  email      String @unique
+  bio        String @db.Text
+  profileUrl String @db.Text
+}
+
+model Group {
+  groupID         String   @id @default(uuid())
+  name            String   @db.Text
+  description     String   @db.Text
+  bannerUrl       String   @db.Text
+  nextSessionTime DateTime
+  totalMembers    Int      @db.Integer
+  isFull          Boolean  @db.Boolean
 }
