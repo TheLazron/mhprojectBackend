@@ -3,7 +3,7 @@ const groupController = require('../controller/groupController');
 var express = require('express');
 
 
-const router = express.Router();
+var router = express.Router();
 
 
 router.get('/explore-groups', groupController.getAllGroups);

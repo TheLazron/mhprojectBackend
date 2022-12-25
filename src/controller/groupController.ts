@@ -6,17 +6,10 @@ import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
 const getAllGroups = async (req: any, res: any) => {
+  console.log("parsed email", res.email);
   const groupData = await prisma.group.findMany();
 
   return res.json({groups: groupData})
-  // await prisma.user.create({
-  //   data: {
-  //     name: "Pandat",
-  //     email: "pandat@gmail.com",
-  //     bio: "Pandat hu",
-  //     profileUrl: "https://images.unsplash.com/photo-1570295999919-56ceb5ecca61?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=580&q=80"
-  //   }
-  // })
 };
 
 const getSingleGroup = async (req: any, res: any)=>{
