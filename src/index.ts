@@ -1,5 +1,6 @@
 //imports
 var express = require('express');
+const cors = require('cors');
 var bodyParser = require('body-parser')
 const groupsRouter  = require('./routes/groupRoutes');
 const userRouter = require('./routes/userRoutes');
@@ -46,6 +47,10 @@ const verifyToken=(req: any, res: any, next: any) => {
 
 }
 
+app.use(cors({
+  origin: 'http://localhost:3000'
+}));
+
 app.use(bodyParser.urlencoded({ extended: false }))
 
 //routes
@@ -58,9 +63,9 @@ console.log(email, name, profileUrl);
   const user = await prisma.user.findUnique({where: {email: email}});
   if(user){
     userID = user.userID;
-
-  }
-  else{
+    console.log("user exists")
+  }else if(!user){
+   try{
     const newUser =await prisma.user.create({data:{
       name: name,
       email: email,
@@ -68,6 +73,9 @@ console.log(email, name, profileUrl);
       bio: ""
     }})
     userID = newUser.userID;
+  }catch(err){
+    console.log(err);
+  }
   }
 
     const token = generateAccessToken(email);
