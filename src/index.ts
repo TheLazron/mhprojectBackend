@@ -5,8 +5,11 @@ var bodyParser = require('body-parser')
 const groupsRouter  = require('./routes/groupRoutes');
 const userRouter = require('./routes/userRoutes');
 const app = express();
+const http = require('http');
 const jwt  = require('jsonwebtoken');
 import { PrismaClient } from "@prisma/client";
+import { disconnect } from "process";
+import { Server } from "socket.io";
 
 
 const prisma = new PrismaClient();
@@ -90,8 +93,56 @@ app.use('/', verifyToken);
 app.use(groupsRouter);
 app.use(userRouter);
 
-app.listen(3005, () => {
-  
-  console.log("server listening on port 3005");
 
-});
+const server = http.createServer(app);
+
+//Cors Websocket Server
+const io = new Server(server, {
+  cors: {
+    origin: 'http://localhost:3000',
+    methods: ['GET', 'POST'],
+  }
+})
+
+server.listen(3333, ()=>{
+  console.log('server listening on port 3333');
+})
+
+
+io.on('connection',(socket:any)=>{
+  console.log(`user Connected ${socket.id}`)
+
+  socket.emit('message', "Hey welcome to the chat");
+  socket.broadcast.emit('message', "A new user has joined the chat");
+  
+
+  socket.on('disconnect', (data:any)=>{
+    io.emit("message", `${data} disconnected`);
+    console.log("A user has disc")
+  })
+
+  socket.on('join_room', (data:any)=>{
+    const {username, room} =data;
+    console.log(`${username} joined ${room}`);
+    socket.join(room);
+     let __createdtime__ = Date.now(); // Current timestamp
+    // Send message to all users currently in the room, apart from the user that just joined
+    socket.broadcast.emit('message', {
+      message: `${username} has joined the chat room`,
+      username: "RandBot",
+      __createdtime__,
+    });
+  })
+
+  socket.on('chatMessage', (data:any)=>{
+    io.emit('chatMessage', data);
+      console.log(data);
+  })
+
+
+})
+
+  
+
+
+app.listen(3005, ()=>console.log("server listening on port 3005"));
