@@ -77,7 +77,7 @@ console.log(email, name, profileUrl);
     }})
     userID = newUser.userID;
   }catch(err){
-    console.log(err);
+    console.log("err",err);
   }
   }
 
