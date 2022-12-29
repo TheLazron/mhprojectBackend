@@ -16,6 +16,10 @@ model User {
   email      String @unique
   bio        String @db.Text
   profileUrl String @db.Text
+
+  groups Group[]
+
+  // @@map("users")
 }
 
 model Group {
@@ -26,4 +30,18 @@ model Group {
   nextSessionTime DateTime
   totalMembers    Int      @db.Integer
   isFull          Boolean  @db.Boolean
+
+  members User[]
+
+  // @@map("groups")
 }
+
+// model GroupMembers {
+//   group   Group  @relation(fields: [groupID], references: [groupID])
+//   groupID String @map("group_id")
+//   user    User   @relation(fields: [userID], references: [userID])
+//   userID  String @map("user_id")
+
+//   @@id([groupID, userID])
+//   @@map("group_members")
+// }

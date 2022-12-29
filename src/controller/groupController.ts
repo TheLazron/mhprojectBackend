@@ -22,6 +22,29 @@ const getSingleGroup = async (req: any, res: any)=>{
   }
 }
 
+const joinGroup = async (req: any, res: any)=>{
+
+
+  // const members = await prisma.group.findUnique({
+  //   where: {groupID: req.params.groupId}
+  // })  
+  await prisma.group.update({
+    where:{
+      groupID: req.params.groupId
+    },
+    data:{
+      members: {
+        set: {email: res.email}
+      }
+      // name: "ho gya update"
+    }
+})
+
+res.json({message:"Group was joined successfully"});
+
+}
+
 
 exports.getAllGroups = getAllGroups;
 exports.getSingleGroup = getSingleGroup;
+exports.joinGroup = joinGroup;
