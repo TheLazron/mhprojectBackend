@@ -7,7 +7,11 @@ const prisma = new PrismaClient();
 
 const getAllGroups = async (req: any, res: any) => {
   console.log("parsed email", res.email);
-  const groupData = await prisma.group.findMany();
+  const groupData = await prisma.group.findMany({
+    include: {
+      members: true
+    }
+  });
 
   return res.json({groups: groupData})
 };
