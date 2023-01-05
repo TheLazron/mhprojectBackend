@@ -10,9 +10,11 @@ const jwt  = require('jsonwebtoken');
 import { PrismaClient } from "@prisma/client";
 import { disconnect } from "process";
 import { Server } from "socket.io";
+import { createClient } from "@supabase/supabase-js";
 
 
 const prisma = new PrismaClient();
+const supabase = createClient('https://kupdnssdpggzrbupaoje.supabase.co', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imt1cGRuc3NkcGdnenJidXBhb2plIiwicm9sZSI6ImFub24iLCJpYXQiOjE2NzI3MzE0MTgsImV4cCI6MTk4ODMwNzQxOH0.-ivfcqBDIy-TedPEveIsL_CNX4S9ZZfeDSOvZ3pxUhM');
 
 //Functions
 //jwt Functions
@@ -134,9 +136,14 @@ io.on('connection',(socket:any)=>{
     });
   })
 
-  socket.on('chatMessage', (data:any)=>{
+  socket.on('chatMessage', async (data:any)=>{
     io.emit('chatMessage', data);
+    const { error } = await supabase
+  .from('cancerSupportGroup')
+  .insert({  message: data, sender: "Jack"})
+  console.log("err", error);
       console.log(data);
+    
   })
 
 
