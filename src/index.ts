@@ -9,13 +9,15 @@ const http = require('http');
 const jwt  = require('jsonwebtoken');
 import { PrismaClient } from "@prisma/client";
 import { disconnect } from "process";
-// import { Server } from "socket.io";
+import { Server } from "socket.io";
 import { createClient } from "@supabase/supabase-js";
 
 
 const prisma = new PrismaClient();
-const supabase = createClient('https://kupdnssdpggzrbupaoje.supabase.co', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imt1cGRuc3NkcGdnenJidXBhb2plIiwicm9sZSI6ImFub24iLCJpYXQiOjE2NzI3MzE0MTgsImV4cCI6MTk4ODMwNzQxOH0.-ivfcqBDIy-TedPEveIsL_CNX4S9ZZfeDSOvZ3pxUhM');
-
+const supabase = createClient(
+  "https://bqzmnjuzohnbbepdwfcd.supabase.co",
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJxem1uanV6b2huYmJlcGR3ZmNkIiwicm9sZSI6ImFub24iLCJpYXQiOjE2NzMyODYxMDcsImV4cCI6MTk4ODg2MjEwN30.HgiBkz4mhWtKP7H-cNdIycCgUOmHikvZRIR30svZBUY"
+);
 //Functions
 //jwt Functions
 const generateAccessToken=(email: String)=>{
@@ -96,58 +98,58 @@ app.use(groupsRouter);
 app.use(userRouter);
 
 
-// const server = http.createServer(app);
+const server = http.createServer(app);
 
-//Cors Websocket Server
-// const io = new Server(server, {
-//   cors: {
-//     origin: 'http://localhost:3000',
-//     methods: ['GET', 'POST'],
-//   }
-// })
+// Cors Websocket Server
+const io = new Server(server, {
+  cors: {
+    origin: 'http://localhost:3000',
+    methods: ['GET', 'POST'],
+  }
+})
 
-// server.listen(3333, ()=>{
-//   console.log('server listening on port 3333');
-// })
+server.listen(3333, ()=>{
+  console.log('server listening on port 3333');
+})
 
 
-// io.on('connection',(socket:any)=>{
-//   console.log(`user Connected ${socket.id}`)
+io.on('connection',(socket:any)=>{
+  console.log(`user Connected ${socket.id}`)
 
-//   socket.emit('message', "Hey welcome to the chat");
-//   socket.broadcast.emit('message', "A new user has joined the chat");
+  socket.emit('message', "Hey welcome to the chat");
+  socket.broadcast.emit('message', "A new user has joined the chat");
   
 
-//   socket.on('disconnect', (data:any)=>{
-//     io.emit("message", `${data} disconnected`);
-//     console.log("A user has disc")
-//   })
+  socket.on('disconnect', (data:any)=>{
+    io.emit("message", `${data} disconnected`);
+    console.log("A user has disc")
+  })
 
-//   socket.on('join_room', (data:any)=>{
-//     const {username, room} =data;
-//     console.log(`${username} joined ${room}`);
-//     socket.join(room);
-//      let __createdtime__ = Date.now(); // Current timestamp
-//     // Send message to all users currently in the room, apart from the user that just joined
-//     socket.broadcast.emit('message', {
-//       message: `${username} has joined the chat room`,
-//       username: "RandBot",
-//       __createdtime__,
-//     });
-//   })
+  socket.on('join_room', (data:any)=>{
+    const {username, room} =data;
+    console.log(`${username} joined ${room}`);
+    socket.join(room);
+     let __createdtime__ = Date.now(); // Current timestamp
+    // Send message to all users currently in the room, apart from the user that just joined
+    socket.broadcast.emit('message', {
+      message: `${username} has joined the chat room`,
+      username: "RandBot",
+      __createdtime__,
+    });
+  })
 
-//   socket.on('chatMessage', async (data:any)=>{
-//     io.emit('chatMessage', data);
-//     const { error } = await supabase
-//   .from('cancerSupportGroup')
-//   .insert({  message: data, sender: "Jack"})
-//   console.log("err", error);
-//       console.log(data);
+  socket.on('chatMessage', async (data:any)=>{
+    io.emit('chatMessage', data);
+    const { error } = await supabase
+  .from('cancerSupportGroup')
+  .insert({  message: data, sender: "Jack"})
+  console.log("err", error);
+      console.log(data);
     
-//   })
+  })
 
 
-// })
+})
 
   
 
